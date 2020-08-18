@@ -778,14 +778,49 @@ bool ImGui::CloseButton(ImGuiID id, const ImVec2& pos)//, float size)
     // Render
     ImU32 col = GetColorU32(held ? ImGuiCol_ButtonActive : ImGuiCol_ButtonHovered);
     ImVec2 center = bb.GetCenter();
-    if (hovered)
-        window->DrawList->AddCircleFilled(center, ImMax(2.0f, g.FontSize * 0.5f + 1.0f), col, 12);
+    if(g.IO.ConfigMacOSXBehaviors)
+    {
+        if (false) // empty
+        {
+            window->DrawList->AddCircleFilled(center, ImMax(2.0f, g.FontSize * 0.45f + 1.0f), GetColorU32(ImVec4(0.625f, 0.625f, 0.625f, 1.0f)), 12);
+            window->DrawList->AddCircleFilled(center, ImMax(2.0f, g.FontSize * 0.42f + 1.0f), GetColorU32(ImVec4(0.85f, 0.85f, 0.85f, 1.0f)), 12);
+        }
+        else if (held)
+        {
+            window->DrawList->AddCircleFilled(center, ImMax(2.0f, g.FontSize * 0.45f + 1.0f), GetColorU32(ImVec4(0.8f, 0.3f, 0.25f, 1.0f)), 12);
+            window->DrawList->AddCircleFilled(center, ImMax(2.0f, g.FontSize * 0.42f + 1.0f), GetColorU32(ImVec4(0.7f, 0.3f, 0.3f, 1.0f)), 12);
+        }
+        else if (!hovered && g.NavWindow != window)
+        {
+            window->DrawList->AddCircleFilled(center, ImMax(2.0f, g.FontSize * 0.45f + 1.0f), GetColorU32(ImVec4(0.4f, 0.4f, 0.4f, 1.0f)), 12);
+            window->DrawList->AddCircleFilled(center, ImMax(2.0f, g.FontSize * 0.42f + 1.0f), GetColorU32(ImVec4(0.85f, 0.85f, 0.85f, 1.0f)), 12);
+        }
+        else
+        {
+            window->DrawList->AddCircleFilled(center, ImMax(2.0f, g.FontSize * 0.45f + 1.0f), GetColorU32(ImVec4(0.64f, 0.24f, 0.24f, 1.0f)), 12);
+            window->DrawList->AddCircleFilled(center, ImMax(2.0f, g.FontSize * 0.42f + 1.0f), GetColorU32(ImVec4(0.9f, 0.3f, 0.3f, 1.0f)), 12);
+        }
 
-    float cross_extent = g.FontSize * 0.5f * 0.7071f - 1.0f;
-    ImU32 cross_col = GetColorU32(ImGuiCol_Text);
-    center -= ImVec2(0.5f, 0.5f);
-    window->DrawList->AddLine(center + ImVec2(+cross_extent, +cross_extent), center + ImVec2(-cross_extent, -cross_extent), cross_col, 1.0f);
-    window->DrawList->AddLine(center + ImVec2(+cross_extent, -cross_extent), center + ImVec2(-cross_extent, +cross_extent), cross_col, 1.0f);
+        if (hovered)
+        {
+            float cross_extent = g.FontSize * 0.36f * 0.7071f - 1.0f;
+            ImU32 cross_col = GetColorU32(ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+            center -= ImVec2(0.5f, 0.5f);
+            window->DrawList->AddLine(center + ImVec2(+cross_extent, +cross_extent), center + ImVec2(-cross_extent, -cross_extent), cross_col, 3.0f);
+            window->DrawList->AddLine(center + ImVec2(+cross_extent, -cross_extent), center + ImVec2(-cross_extent, +cross_extent), cross_col, 3.0f);
+        }
+    }
+    else
+    {
+        if (hovered)
+            window->DrawList->AddCircleFilled(center, ImMax(2.0f, g.FontSize * 0.5f + 1.0f), col, 12);
+
+        float cross_extent = g.FontSize * 0.5f * 0.7071f - 1.0f;
+        ImU32 cross_col = GetColorU32(ImGuiCol_Text);
+        center -= ImVec2(0.5f, 0.5f);
+        window->DrawList->AddLine(center + ImVec2(+cross_extent, +cross_extent), center + ImVec2(-cross_extent, -cross_extent), cross_col, 1.0f);
+        window->DrawList->AddLine(center + ImVec2(+cross_extent, -cross_extent), center + ImVec2(-cross_extent, +cross_extent), cross_col, 1.0f);
+    }
 
     return pressed;
 }
